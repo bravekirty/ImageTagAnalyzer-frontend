@@ -7,7 +7,7 @@ import FullScreenImage from './FullScreenImage';
 const ImageUpload = ({ onUpload, onTags, onLoading, isLoading, uploadedImage }) => {
     const fileInputRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [sampleImages, setSampleImages] = useState([]);
+    const [sampleImages, setSampleImages] = useState([]); // Ensure it starts as empty array
     const [loadingSamples, setLoadingSamples] = useState(false);
     const [showFullScreen, setShowFullScreen] = useState(false);
 
@@ -17,11 +17,15 @@ const ImageUpload = ({ onUpload, onTags, onLoading, isLoading, uploadedImage }) 
             setLoadingSamples(true);
             try {
                 const response = await getSampleImages();
-                setSampleImages(response.data || []);
+                console.log('Sample images response:', response.data); // Debug log
+
+                // Ensure we always have an array, even if the response is null/undefined
+                const samples = Array.isArray(response.data) ? response.data : [];
+                setSampleImages(samples);
             } catch (error) {
                 console.error('Failed to load sample images:', error);
                 toast.error('Failed to load sample images');
-                setSampleImages([]);
+                setSampleImages([]); // Ensure it's always an array
             } finally {
                 setLoadingSamples(false);
             }
@@ -74,7 +78,7 @@ const ImageUpload = ({ onUpload, onTags, onLoading, isLoading, uploadedImage }) 
 
             let imageUrl = sample.image_url;
             if (imageUrl && !imageUrl.startsWith('http')) {
-                imageUrl = `http://${imageUrl}`;
+                imageUrl = `/api${imageUrl}`; // Use proxy path
             }
 
             onUpload(imageUrl);
@@ -135,7 +139,7 @@ const ImageUpload = ({ onUpload, onTags, onLoading, isLoading, uploadedImage }) 
             {/* Upload/Preview Area - Side by side */}
             <div className="flex gap-6 mb-6">
                 {/* Upload Area - 2/3 width (ALWAYS VISIBLE) */}
-                <div className="flex-1"> {/* This will take 2/3 space */}
+                <div className="flex-1">
                     <div
                         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200 h-full flex flex-col justify-center ${isDragging
                             ? 'border-blue-400 bg-blue-50'
@@ -169,7 +173,7 @@ const ImageUpload = ({ onUpload, onTags, onLoading, isLoading, uploadedImage }) 
 
                 {/* Image Preview - 1/3 width (ONLY WHEN IMAGE EXISTS) */}
                 {uploadedImage && (
-                    <div className="w-1/3"> {/* This will take 1/3 space */}
+                    <div className="w-1/3">
                         <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
                             <h3 className="text-sm font-semibold text-gray-700 mb-2">Image Preview</h3>
                             <div
@@ -204,7 +208,7 @@ const ImageUpload = ({ onUpload, onTags, onLoading, isLoading, uploadedImage }) 
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
                         <p className="text-sm text-gray-500 mt-2">Loading samples...</p>
                     </div>
-                ) : sampleImages.length > 0 ? (
+                ) : Array.isArray(sampleImages) && sampleImages.length > 0 ? ( // Added Array.isArray check
                     <div className="grid grid-cols-3 gap-3">
                         {sampleImages.map((sample) => (
                             <button
