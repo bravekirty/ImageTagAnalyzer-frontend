@@ -1,14 +1,13 @@
 import axios from 'axios';
 
-// Make sure this matches your FastAPI backend URL
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = '/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
 });
 
 export const uploadImage = (formData) => {
-    return api.post('/image/', formData, {
+    return api.post('/image/upload/', formData, {  // Fixed endpoint path
         params: {
             confidence_threshold: 30.0,
             language: 'en'

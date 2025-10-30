@@ -14,21 +14,21 @@ const ImageUpload = ({ onUpload, onTags, onLoading, isLoading }) => {
             emoji: "🍓",
             name: "Ripe Strawberry",
             description: "A strawberry hangs from a slender green bough",
-            imageUrl: "http://localhost:8000/static/samples/strawberry.jpg"
+            imageUrl: "/api/static/samples/strawberry.jpg"
         },
         {
             id: 2,
             emoji: "🌆",
             name: "Modern Cityscape",
             description: "Modern city skyline with buildings and streets",
-            imageUrl: "http://localhost:8000/static/samples/urban.jpg"
+            imageUrl: "/api/static/samples/urban.jpg"
         },
         {
             id: 3,
             emoji: "🍂",
             name: "Autumn Forest",
             description: "A sun-dappled autumn forest with fiery foliage",
-            imageUrl: "http://localhost:8000/static/samples/autumn.jpg"
+            imageUrl: "/api/static/samples/autumn.jpg"
         }
     ];
 
